@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Popstar Universe</title>
+
+    <!-- google fonts Unbounded & Quicksand-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Quicksand:wght@500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Unbounded:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- <script src="https://scripts.api.disqometer.com/desktop_inpage_script.js?nc=MHgxNmIwM2IwMDA1NTc4ODc1NzI1MzU3NzcxNDIz"></script> -->
+
+</head>
+<body>
+    <!-- star cursor -->
+    <canvas id="sparkle-canvas" aria-hidden="true"></canvas>
+
+    <!-- film grain overlay -->
+    <svg class="grain" aria-hidden="true">
+        <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noise)" />
+    </svg>
+
+    <!-- welcome screen -->
+    <section id="welcome" class="screen is-active">
+        <!-- my star wallpaper -->
+        <div class="welcome-bg"></div>
+        <!-- dark glow in middle -->
+        <div class="spotlight"></div>
+
+        <div class="title-card">
+            <p class="eyebrow">✦ now entering ✦</p>
+            <h1 class="chrome-text">My Popstar<br>Universe</h1>
+            <p class="tagline">✦✦✦✦</p>
+            <button id="enter-btn" class="glow-btn">✦Enter✦</button>
+        </div>
+    </section>
+
+    <!-- hub (main screen) content -->
+    <section id="hub" class="screen">
+        <!-- main content goes here -->
+        <div class="night-sky" aria-hidden="true"></div> 
+        <header class="hub-header">
+            <h2 class="chrome-text">My Popstar Universe</h2>
+            <p class="tagline">✦tap a star to explore!✦</p>
+            <button class="glow-btn" id="back-btn">✦Back✦</button>
+        </header>
+        
+        <div class="star-map">
+            <button class="feature-star" data-feature="crash-out">
+                <img src="assets/pink-star.png" alt="">
+                <span class="star-title">Don't Crash Out</span>
+            </button>
+
+            <button class="feature-star" data-feature="pillow-fight">
+                <img src="assets/pink-star.png" alt="">
+                <span class="star-title">Let's Have A Pillow Fight</span>
+            </button>
+
+            <button class="feature-star" data-feature="popstar">
+                <img src="assets/pink-star.png" alt="">
+                <span class="star-title">My Popstar</span>
+            </button>
+
+            <button class="feature-star" data-feature="cloud-9">
+                <img src="assets/pink-star.png" alt="">
+                <span class="star-title">I'm On Cloud 9</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- feature screens -->
+    <section id="crash-out" class="screen feature-screen">
+        <h2 class="chrome-text">Don't Crash Out!</h2>
+        <div class="crash-stats">
+            <span id="crash-round">round 1 / 8</span>
+            <span id="crash-cracks">cracks 0 / 3</span>
+        </div>
+
+        <p class="crash-message" id="crash-message">tap when the star is in the pink zone!</p>
+
+        <div class="meter" id="meter">
+            <div class="meter-zone" id="meter-zone"></div>
+            <span class="meter-star" id="meter-star">✦</span>
+        </div>
+
+        <button class="glow-btn" id="calm-btn">start✦</button>
+
+        <button class="glow-btn back-to-hub">✦Back✦</button>
+    </section>
+
+    <section id="pillow-fight" class="screen feature-screen">
+        <h2 class="chrome-text">Let's Have A Pillow Fight!</h2>
+        <div class="pillow-stats">
+            <span id="pillow-dodged">dodged 0</span>
+            <span id="pillow-bops">bops 0 / 3</span>
+        </div>
+
+        <div class="swing">
+            <img class="swing-pillow" id="swing-pillow" src="assets/pink-pillow.png" alt="">
+            <p class="swing-label">pillow incoming!</p>
+            <div class="swing-bar" id="swing-bar">
+                <div class="swing-fill" id="swing-fill"></div>
+            </div>
+        </div>
+
+        <div class="order">
+            <span class="order-slot"><img class="order-img" src="assets/brown-bear.png" alt=""></span>
+            <span class="order-slot"><img class="order-img" src="assets/pink-eyemask.png" alt=""></span>
+            <span class="order-slot"><img class="order-img" src="assets/popcorn.png" alt=""></span>
+        </div>
+
+        <p class="pillow-message" id="pillow-message">tap the items in order before the pillow bops you!</p>
+
+        <div class="items">
+            <button class="item-btn" data-item="brown-bear"><img src="assets/brown-bear.png" alt="brown bear"></button>
+            <button class="item-btn" data-item="pink-eyemask"><img src="assets/pink-eyemask.png" alt="pink eye mask"></button>
+            <button class="item-btn" data-item="popcorn"><img src="assets/popcorn.png" alt="popcorn"></button>
+        </div>
+
+        <button class="glow-btn" id="pillow-btn">start pillow fight ✦</button>
+        <button class="glow-btn back-to-hub">✦Back✦</button>
+    </section>
+
+    <section id="popstar" class="screen feature-screen">
+        <div class="booth-marquee">
+            <span class="booth-eyebrow">✦ the ✦</span>
+            <h2 class="chrome-text">POPSTAR</h2>
+            <span class="booth-script">photobooth</span>
+        </div>
+
+        <p class="tagline" id="booth-message">strike a pose ✦</p>
+
+        <!-- STAGE 1: the booth camera -->
+        <div class="camera-view">
+            <div class="mode-switch">
+                <button class="format-btn is-selected" data-format="polaroid">polaroid</button>
+                <button class="format-btn" data-format="strip">photo strip</button>
+            </div>
+
+            <div class="booth-machine">
+                <div class="booth-bulbs"></div>
+
+                <div class="camera-frame">
+                    <div class="camera-screen" id="camera-screen">
+                        <video class="booth-video" id="booth-video" autoplay playsinline muted></video>
+                        <span class="countdown" id="countdown"></span>
+                    </div>
+                </div>
+
+                <div class="shot-dots">
+                    <span class="shot-dot"></span>
+                    <span class="shot-dot"></span>
+                    <span class="shot-dot"></span>
+                    <span class="shot-dot"></span>
+                </div>
+
+                <button class="shutter-btn" id="snap-btn" aria-label="take photo"></button>
+                <div class="print-slot"></div>
+            </div>
+        </div>
+
+        <!-- the photobooth stage -->
+        <div class="polaroid-view">
+            <div class="polaroid">
+                <div class="photo-area" id="photo-area">
+                    <canvas class="booth-photo" id="booth-photo"></canvas>
+                </div>
+                <p class="polaroid-caption">popstar ✦</p>
+            </div>
+
+            <div class="photo-strip strip-pink" id="photo-strip">
+                <div class="strip-header">✦ <span class="strip-badge">popstar</span> ✦</div>
+                <div class="strip-photos" id="strip-photos"></div>
+                <p class="strip-caption">my popstar era ✦</p>
+            </div>
+
+            <div class="strip-styles">
+                <button class="strip-style-btn is-selected" data-style="pink" aria-label="pink polka dot strip"></button>
+                <button class="strip-style-btn" data-style="black" aria-label="black film strip"></button>
+            </div>
+
+            <div class="sticker-tray">
+                <button class="sticker-btn" data-sticker="pink-photobooth-star"><img src="assets/pink-photobooth-star.png" alt="star sticker"></button>
+                <button class="sticker-btn" data-sticker="brown-bear"><img src="assets/brown-bear.png" alt="brown bear sticker"></button>
+            </div>
+
+            <div class="booth-buttons">
+                <button class="glow-btn" id="retake-btn">retake</button>
+                <button class="glow-btn" id="save-btn">save ✦</button>
+            </div>
+        </div> 
+
+        <button class="glow-btn back-to-hub">✦Back✦</button>
+    </section>
+
+    <section id="cloud-9" class="screen feature-screen">
+        <h2 class="chrome-text">I'm On Cloud 9</h2>
+        <!-- <p class="tagline">⭐︎coming soon!⭐︎</p> -->
+        <div class="mode-switch">
+            <button class="mode-btn is-selected" data-mode="nine">9 breaths</button>
+            <button class="mode-btn" data-mode="free">just breathe</button>
+        </div>
+        
+        <div class="cloud-ladder" id="cloud-ladder">
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>
+            <span class="ladder-step"></span>    
+        </div>
+
+        <img class="breath-cloud" id="breath-cloud" src="assets/cloud-pic.png" alt="">
+
+        <p class="breath-label" id="breath-label">ready when you are</p>
+        <p class="breath-sub" id="breath-sub">9 slow breaths to float up to cloud 9</p>
+
+        <button class="glow-btn" id="breath-btn">start breathing ✦</button>
+
+        <button class="glow-btn back-to-hub">✦Back✦</button>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

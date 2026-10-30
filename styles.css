@@ -1,0 +1,1021 @@
+/* ✦ My Popstar Universe — welcome screen styles ✦ */
+
+/* ---------- 1. Colors + fonts (change them here, they update everywhere) ---------- */
+:root {
+    --black: #070407;
+    --pink: #ffc9e4;
+    --hot-pink: #ff8cc6;
+    --lilac: #d9b8e8;
+    --silver: #e6e6ec;
+
+    --font-display: "Unbounded", sans-serif;
+    --font-body: "Quicksand", sans-serif;
+    --font-script: "Pinyon Script", cursive;
+}
+
+/* ---------- 2. Page basics ---------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    background: var(--black);
+    color: var(--silver);
+    font-family: var(--font-body);
+    overflow: hidden;
+}
+
+/* On computers, hide the normal arrow cursor (the sparkle star replaces it).
+   Phones don't have a cursor, so this only applies to devices that can hover. */
+@media (hover: hover) {
+    body, button { cursor: none; }
+}
+
+/* ---------- starry night sky ---------- */
+
+.night-sky {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(255, 140, 198, 0.12), transparent 50%),
+        radial-gradient(ellipse at 80% 75%, rgba(217, 184, 232, 0.10), transparent 50%);
+}
+
+.sky-star {
+    position: absolute;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    animation: sky-twinkle 3s ease-in-out infinite;
+}
+
+.sky-star.is-pink {
+    background: var(--pink);
+    box-shadow: 0 0 8px var(--hot-pink);
+}
+
+@keyframes sky-twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.7); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ---------- 3. Sparkle canvas + grain overlay ---------- */
+#sparkle-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none; /* lets clicks pass through to the button */
+}
+
+.grain {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 40;
+    opacity: 0.08;          /* raise for more grain */
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+/* ---------- 4. Welcome screen layout ---------- */
+.screen {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;    /* centers the title card */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 1s;
+}
+
+.screen.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* your wallpaper */
+.welcome-bg {
+    position: absolute;
+    inset: -4%;             /* extra room so the zoom never shows the edges */
+    background: url("assets/pink-star-background.png") center / cover no-repeat;
+    animation: breathe 9s ease-in-out infinite alternate;
+}
+
+/* slow zoom + brightness pulse */
+@keyframes breathe {
+    from { transform: scale(1);    filter: brightness(0.9); }
+    to   { transform: scale(1.05); filter: brightness(1.12); }
+}
+
+/* dark spotlight behind the title (raise 0.92 = darker middle) */
+.spotlight {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+        rgba(7, 4, 7, 0.92) 0%,
+        rgba(7, 4, 7, 0.65) 30%,
+        rgba(7, 4, 7, 0) 65%);
+}
+
+/* when Enter is clicked: zoom into the stars and fade out */
+#welcome.is-leaving .welcome-bg {
+    animation: none;
+    transform: scale(1.6);
+    filter: blur(6px) brightness(1.4);
+    transition: transform 1.2s ease-in, filter 1.2s ease-in;
+}
+
+#welcome.is-leaving {
+    opacity: 0;
+}
+
+/* ---------- 5. Title card text ---------- */
+.title-card {
+    position: relative;     /* sits above the wallpaper + spotlight */
+    text-align: center;
+    padding: 2.5rem 1rem;
+    max-width: min(92vw, 520px);
+}
+
+.eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 1rem;
+}
+
+.tagline {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--lilac);
+    letter-spacing: 0.05em;
+}
+
+/* ---------- 6. Chrome title with a sweeping shimmer ---------- */
+.chrome-text {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 10vw, 5rem);  /* shrinks on phones, grows on desktop */
+    line-height: 1;
+
+    /* layer 1 = the pink-white shimmer stripe
+       layer 2 = the silver gradient that looks like chrome */
+    background:
+        linear-gradient(105deg, transparent 40%, rgba(255, 228, 242, 0.95) 50%, transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, #d7d7df 38%, #77737f 50%, #f4f4f8 62%, #b9b6c2 100%);
+    background-size: 250% 100%, 100% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;      /* paints the gradients only inside the letters */
+    color: transparent;
+
+    filter: drop-shadow(0 0 18px rgba(255, 201, 228, 0.45));
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%        { background-position: 150% 0, 0 0; }
+    60%, 100% { background-position: -50% 0, 0 0; }  /* pause between sweeps */
+}
+
+/* ---------- 7. Glowing Enter button ---------- */
+.glow-btn {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: var(--black);
+    background: linear-gradient(180deg, #ffe3f1, var(--pink) 55%, #f3a9d0);
+    border: 2px solid var(--silver);
+    border-radius: 999px;       /* pill shape */
+    padding: 0.9rem 2.4rem;
+    animation: pulse 2.4s ease-in-out infinite;
+    transition: transform 0.2s ease;
+}
+
+.glow-btn:hover,
+.glow-btn:focus-visible {
+    transform: scale(1.06);
+    outline: none;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(230, 230, 236, 0.15), 0 0 22px rgba(255, 140, 198, 0.5); }
+    50%      { box-shadow: 0 0 0 6px rgba(230, 230, 236, 0.25), 0 0 40px rgba(255, 140, 198, 0.9); }
+}
+
+/* ---------- 8. Calmer version for people who turn off motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .welcome-bg, .glow-btn, .chrome-text, .sky-star { animation: none; }
+}
+
+/* ---------- hub (main screen) styles ---------- */
+#hub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem 1rem;
+}
+
+.hub-header {
+    text-align: center;
+}
+
+#hub .chrome-text {
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+}
+
+.star-map {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 3rem;
+}
+
+.feature-star {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.4s ease,
+}
+
+.feature-star:nth-child(even) {
+    transform: translateY(3rem);
+}
+
+.feature-star img {
+    width: clamp(90px, 25vw, 140px);
+    height: auto;
+    animation: twinkle 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.star-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    max-width: 10rem;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* twinkle star animation */
+@keyframes twinkle {
+    0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 4px rgba(255, 201, 228, 0.3));
+    }
+    50% {
+        filter: brightness(1.15) drop-shadow(0 0 16px rgba(255, 201, 228, 0.9));
+    }
+}
+.feature-star:nth-child(2) img { animation-delay: 0.75s; }
+.feature-star:nth-child(3) img { animation-delay: 1.5s; }
+.feature-star:nth-child(4) img { animation-delay: 2.25s; }
+
+/* hover effects */
+.feature-star:hover img {   
+    transform: scale(1.12) rotate(8deg);
+}
+.feature-star:hover .star-title {
+    color: var(--pink);
+    text-shadow: 0 0 12px var(--hot-pink);
+}
+
+/* when a star gets clicked */
+.feature-star.is-clicked img {
+    animation: star-pop 0.8s ease-out;
+}
+
+@keyframes star-pop {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    40% {
+        transform: scale(1.35) rotate(-12deg);
+        filter: brightness(1.4) drop-shadow(0 0 30px rgba(255, 255, 255, 0.95));
+    }
+    100% {
+        transform: scale(1.15) rotate(8deg);
+        filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 201, 228, 0.9));
+    }
+}
+
+.star-map.has-picked .feature-star:not(.is-picked) {
+    opacity: 0.3;
+}
+
+/* ---------- feature screens ---------- */
+.feature-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.feature-screen .chrome-text {
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+}
+
+/* ---------- cloud 9 screen ---------- */
+#cloud-9 {
+    background: linear-gradient(180deg, #0b0610 0%, #22142e 55%, #4a2f5c 100%);
+}
+
+.mode-switch {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: rgba(10, 6, 12, 0.5);
+    border: 1px solid rgba(230, 230, 236, 0.25);
+}
+
+.mode-btn,
+.format-btn {
+    min-height: 40px;
+    padding: 0 1rem;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--silver);
+    font: inherit;
+    font-weight: 600;
+}
+
+.mode-btn.is-selected,
+.format-btn.is-selected {
+    background: var(--pink);
+    color: var(--black);
+}
+
+.cloud-ladder {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.6rem;
+}
+
+.ladder-step {
+    width: 26px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.ladder-step.is-filled {
+    background: var(--pink);
+    box-shadow: 0 0 10px var(--hot-pink);
+}
+
+.cloud-ladder {
+    transition: opacity 0.5s ease;
+}
+
+.cloud-ladder.is-hidden {
+    opacity: 0;
+}
+
+/* the cloud (will be my drawn cloud image once i make it */
+.breath-cloud {
+    width: min(70vw, 340px);
+    height: auto;
+    transition: transform 4s ease-in-out, filter 2s ease-in-out;
+}
+
+.breath-cloud.is-big {
+    transform: scale(1.3);
+}
+
+.breath-cloud.is-glowing {
+    filter: drop-shadow(0 0 25px rgba(255, 201, 228, 0.9));
+}
+
+/* the guidance text */
+.breath-label {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: #ffffff;
+}
+
+.breath-sub {
+    color: var(--lilac);
+}
+
+/* ---------- Don't Crash Out ---------- */
+#crash-out {
+    background: linear-gradient(180deg, #0b0a0e 0%, #17151c 60%, #070407 100%);
+}
+
+.crash-stats, .pillow-stats {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.crash-message, .pillow-message {
+    font-family: var(--font-display);
+    color: var(--hot-pink);
+    min-height: 1.5em;
+}
+
+.meter {
+    position: relative;
+    width: min(85vw, 420px);
+    height: 44px;
+    border-radius: 999px;
+    border: 2px solid #b9b6c2;
+    background: linear-gradient(90deg, #3a0f22, #1d1a22 30%, #1d1a22 70%, #3a0f22);
+}
+
+.meter-zone {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 35%;
+    width: 30%;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffe3f1, var(--pink) 55%, #f3a9d0);
+    box-shadow: 0 0 18px rgba(255, 140, 198, 0.8);
+}
+
+.meter-star {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow: 0 0 10px var(--hot-pink);
+}
+
+.meter.is-shaking {
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }  
+}
+
+/* ---------- Let's Have A Pillow Fight ---------- */
+#pillow-fight {
+    background: radial-gradient(ellipse at 50% 100%, #3a1a2e 0%, #170b15 50%, #070407 85%);
+}
+
+.swing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: min(85vw, 420px);
+}
+
+.swing-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lilac);
+}
+
+.swing-bar {
+    height: 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(230, 230, 236, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.swing-fill {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink), var(--hot-pink));
+}
+
+.order {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.order-slot {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    border-radius: 16px;
+    border: 1.5px dashed rgba(230, 230, 236, 0.4);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.order-slot.is-done {
+    border: 1.5px solid var(--pink);
+    background: rgba(255, 201, 228, 0.25);
+    box-shadow: 0 0 14px rgba(255, 140, 198, 0.6);
+}
+
+.items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: min(90vw, 420px);
+}
+
+.item-btn {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    /*font-size: 1.8rem;*/
+    border-radius: 16px;
+    border: 1.5px solid rgba(230, 230, 236, 0.4);
+    background: rgba(10, 6, 12, 0.6);
+    transition: transform 0.15s ease;
+}
+
+.item-btn:active {
+    transform: scale(0.9);
+}
+
+.swing-bar.is-shaking {
+    animation: shake 0.4s ease;
+}
+
+/* the pillow above the bar */
+.swing-pillow {
+    width: 110px;
+    height: auto;
+    align-self: center;
+    transform: rotate(-10deg);
+    transition: transform 0.1s linear;
+}
+
+.swing-pillow.is-bopping {
+    animation: pillow-bop 0.6s ease;
+}
+
+@keyframes pillow-bop {
+    0% { transform: rotate(-40deg) scale(1); }
+    40% { transform: rotate(25deg) scale(1.6); }
+    100% { transform: rotate(-10deg) scale(1); }
+}
+
+/* drawings inside the order boxes and buttons */
+.order-img,
+.item-btn img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+/* ---------- My Popstar ---------- */
+
+/* === switching between the two stages === */
+.camera-view,
+.polaroid-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.polaroid-view {
+    display: none;
+}
+
+#popstar.is-snapped .camera-view {
+    display: none;
+}
+
+#popstar.is-snapped .polaroid-view {
+    display: flex;
+}
+
+/* === STAGE 1: the digital camera === */
+.camera-screen {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 10px;
+    background: linear-gradient(160deg, #3a2a3a, #7a5a74 60%, #c99ab8);
+}
+
+/* the live video and the finished photo both fill their box */
+.booth-video,
+.booth-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* mirror the live video, like a selfie */
+.booth-video {
+    transform: scaleX(-1);
+}
+
+/* the 3… 2… 1… */
+.countdown {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 5rem;
+    color: #ffffff;
+    text-shadow: 0 0 20px var(--hot-pink);
+}
+
+/* the white flash */
+.camera-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.camera-screen.is-flashing::after {
+    animation: flash 0.4s ease-out;
+}
+
+@keyframes flash {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* the round shutter button */
+.shutter-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 4px solid var(--silver);
+    background: radial-gradient(circle, var(--pink) 0 55%, #ffffff 56%);
+    box-shadow: 0 0 24px rgba(255, 140, 198, 0.6);
+    transition: transform 0.15s ease;
+}
+
+.shutter-btn:active {
+    transform: scale(0.9);
+}
+
+.shutter-btn:disabled {
+    opacity: 0.5;
+}
+
+/* === STAGE 2: the polaroid === */
+.polaroid {
+    width: min(80vw, 320px);
+    padding: 12px 12px 0;
+    background: #f7f4f6;
+    border-radius: 6px;
+    transform: rotate(-2deg);
+    box-shadow: 0 20px 50px rgba(255, 140, 198, 0.35);
+}
+
+.photo-area {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 2px;
+    background: linear-gradient(160deg, #3a2a3a, #7a5a74 60%, #c99ab8);
+}
+
+.polaroid-caption {
+    margin: 0;
+    padding: 12px 0 14px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: #2a2730;
+}
+
+/* the sticker tray */
+.sticker-tray {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.sticker-btn {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    border: 1px solid rgba(230, 230, 236, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.15s ease;
+}
+
+.sticker-btn:active {
+    transform: scale(0.9);
+}
+
+.sticker-btn img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+/* retake + save */
+.booth-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.booth-buttons .glow-btn {
+    margin-top: 0;
+}
+
+/* stickers placed on the photo */
+.placed-sticker {
+    position: absolute;
+    width: 28%;
+    transform: translate(-50%, -50%);
+    touch-action: none;
+    user-select: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+    transition: transform 0.15s ease;
+}
+
+.placed-sticker.is-dragging {
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* the marquee title */
+.booth-marquee {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.booth-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--pink);
+}
+
+.booth-script {
+    font-family: var(--font-script);
+    font-size: 2.2rem;
+    color: var(--hot-pink);
+    text-shadow: 0 0 12px rgba(255, 140, 198, 0.6);
+    margin-top: -0.3rem;
+}
+
+/* the booth machine */
+.booth-machine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    width: min(88vw, 440px);
+    padding: 14px 14px 18px;
+    border-radius: 28px;
+    background: #12080f;
+    border: 3px solid var(--pink);
+    box-shadow: 0 0 40px rgba(255, 140, 198, 0.4);
+}
+
+/* a row of glowing bulbs, drawn with one background */
+.booth-bulbs {
+    width: 100%;
+    height: 12px;
+    background: radial-gradient(circle, #ffe3f1 0 4px, transparent 5px) center / 28px 12px repeat-x;
+    filter: drop-shadow(0 0 4px var(--hot-pink));
+}
+
+/* the polka-dot frame around the camera */
+.camera-frame {
+    width: 100%;
+    padding: 10px;
+    border-radius: 16px;
+    background-color: var(--pink);
+    background-image: radial-gradient(var(--black) 18%, transparent 20%);
+    background-size: 18px 18px;
+}
+
+/* the 4 shot dots (only in photo strip mode) */
+.shot-dots {
+    display: none;
+    gap: 10px;
+}
+
+#popstar.is-strip-mode .shot-dots {
+    display: flex;
+}
+
+.shot-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--pink);
+}
+
+.shot-dot.is-done {
+    background: var(--pink);
+}
+
+/* the print slot */
+.print-slot {
+    width: 60%;
+    height: 8px;
+    border-radius: 999px;
+    background: #000000;
+    border: 1px solid #77737f;
+}
+
+/* ---------- photo strip ---------- */
+
+/* let the Popstar screen scroll if the strip is taller than the screen */
+#popstar {
+    overflow-y: auto;
+    justify-content: safe center;
+}
+
+/* show the polaroid OR the strip, depending on the format */
+.photo-strip,
+.strip-styles {
+    display: none;
+}
+
+#popstar.is-strip-mode .polaroid {
+    display: none;
+}
+
+#popstar.is-strip-mode .photo-strip,
+#popstar.is-strip-mode .strip-styles {
+    display: flex;
+}
+
+/* the strip (shared by both styles) */
+.photo-strip {
+    position: relative;
+    flex-direction: column;
+    gap: 8px;
+    width: min(42vw, 160px);
+    padding: 12px;
+    box-shadow: 0 16px 40px rgba(255, 140, 198, 0.35);
+    animation: print-out 1.6s ease-out;
+}
+
+/* stickers on a strip */
+.photo-strip {
+    overflow: hidden;
+}
+
+.photo-strip .placed-sticker {
+    width: 45%;
+}
+
+.strip-photos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.strip-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.strip-caption {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-script);
+    font-size: 1.4rem;
+    line-height: 1.1;
+}
+
+.strip-header {
+    display: none;
+}
+
+/* printing: the strip is revealed from the top down */
+@keyframes print-out {
+    from {
+        clip-path: inset(0 0 100% 0);
+        transform: translateY(-30px);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+        transform: translateY(0);
+    }
+}
+
+/* STYLE 1: pink polka dots 🩷 */
+.strip-pink {
+    background-color: #ffd9ec;
+    background-image: radial-gradient(var(--black) 16%, transparent 18%);
+    background-size: 16px 16px;
+}
+
+.strip-pink .strip-photo {
+    border: 3px solid #ffffff;
+}
+
+.strip-pink .strip-caption {
+    color: var(--black);
+    background: #ffd9ec;
+    border-radius: 8px;
+    padding: 4px 0;
+}
+
+/* STYLE 2: black film 🖤 */
+.strip-black {
+    background: #121014;
+    padding-top: 34px;
+}
+
+.strip-black .strip-header {
+    display: flex;
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.6rem;
+    color: var(--silver);
+}
+
+.strip-badge {
+    padding: 0 10px;
+    border: 1px solid var(--silver);
+    border-radius: 999px;
+    font-family: var(--font-script);
+    font-size: 1rem;
+}
+
+.strip-black .strip-caption {
+    color: var(--silver);
+}
+
+/* little silver film dots down the left side */
+.strip-black::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 40px;
+    bottom: 40px;
+    width: 6px;
+    background: radial-gradient(circle, #b9b6c2 0 2px, transparent 2.5px) center / 6px 40px repeat-y;
+}
+
+/* the style swatches */
+.strip-styles {
+    gap: 10px;
+}
+
+.strip-style-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid #77737f;
+}
+
+.strip-style-btn[data-style="pink"] {
+    background-color: #ffd9ec;
+    background-image: radial-gradient(var(--black) 16%, transparent 18%);
+    background-size: 12px 12px;
+}
+
+.strip-style-btn[data-style="black"] {
+    background: #121014;
+}
+
+.strip-style-btn.is-selected {
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 14px rgba(255, 140, 198, 0.7);
+}
